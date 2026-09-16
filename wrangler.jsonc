@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "flappy-buddy",
+  "account_id": "65411eb8018e2a59f22559dbdd5ea384",
+  "compatibility_date": "2026-09-16",
+  "workers_dev": true,
+  "build": { "command": "npm run build", "watch_dir": "index.html" },
+  "assets": { "directory": "./dist" }
+}

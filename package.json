@@ -1,0 +1,16 @@
+{
+  "name": "flappy-buddy",
+  "version": "1.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "dev": "wrangler dev",
+    "login": "wrangler login",
+    "whoami": "wrangler whoami",
+    "check": "wrangler deploy --dry-run",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.132.0"
+  }
+}
