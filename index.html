@@ -10,7 +10,7 @@
 <body>
 <main>
 <header><div class="brand">flappy<span>●</span>buddy</div><div class="badge">작은 날개, 새로운 기록</div></header>
-<div class="layout"><section class="intro"><div class="eyebrow">A LITTLE SKY ADVENTURE</div><h1>가볍게 날아,<br>한 칸 더 멀리.</h1><p>작은 친구와 초록빛 하늘을 날아보세요.<br>파이프 사이를 지나며 나만의 기록에 도전해요.</p><div class="instructions"><div><kbd>SPACE</kbd>날갯짓하며 위로 점프</div><div><kbd>+1</kbd>파이프 한 쌍을 통과할 때마다</div><div><kbd>10점마다</kbd>속도 +15% · 난이도 상승</div><div><kbd>낮과 밤</kbd>30초마다 바뀌는 하늘</div><div><kbd>다시 시작</kbd>점수 0부터 새로운 도전</div></div></section>
+<div class="layout"><section class="intro"><div class="eyebrow">A LITTLE SKY ADVENTURE</div><h1>가볍게 날아,<br>한 칸 더 멀리.</h1><p>작은 친구와 초록빛 하늘을 날아보세요.<br>파이프 사이를 지나며 나만의 기록에 도전해요.</p><div class="instructions"><div><kbd>SPACE</kbd>날갯짓하며 위로 점프</div><div><kbd>+1</kbd>파이프 한 쌍을 통과할 때마다</div><div><kbd>10점마다</kbd>속도 +15% · 난이도 상승</div><div><kbd>30점마다</kbd>속도 +30% 추가 · 누적 가속</div><div><kbd>낮과 밤</kbd>30초마다 바뀌는 하늘</div><div><kbd>다시 시작</kbd>점수 0부터 새로운 도전</div></div></section>
 <section aria-label="플래피 버드 게임"><div class="frame"><canvas id="game" width="400" height="600" aria-label="스페이스바 또는 화면 터치로 점프하는 게임"></canvas><div class="hud"><div class="score">SCORE <strong id="score">0</strong></div><div id="state" class="state">READY</div></div><div id="overlay" class="overlay"><div class="card"><div class="icon" id="icon">✦</div><h2 id="title">날아볼 준비 됐나요?</h2><p id="message">시작 버튼을 누른 뒤<br>스페이스바로 날개를 움직여요.</p><button id="start" type="button">게임 시작 →</button></div></div></div><div class="hint">SPACE / ↑ / 화면 클릭 · 터치로 점프</div></section></div>
 <footer><span>FLAPPY BUDDY / 01</span><span>인터넷 없이도, 언제든 플레이.</span></footer>
 </main>
@@ -21,12 +21,13 @@ const scoreEl=document.getElementById('score'),stateEl=document.getElementById('
 const titleEl=document.getElementById('title'),messageEl=document.getElementById('message'),startButton=document.getElementById('start');
 const W=400,H=600,FLOOR=548,R=14,GAP=168,PIPE_WIDTH=66,SPEED=145,DAY_CYCLE=60;
 let mode='ready',bird={x:104,y:260,v:0},pipes=[],score=0,spawnClock=0,lastTime=null,accumulator=0,flight=0;
-// A full day takes 60 seconds of active play. Each ten points adds 15% of base speed.
+// A full day takes 60 seconds. Add 15% of base speed every 10 points and an extra 30% every 30 points.
 function level(){return Math.floor(score/10);}
-function speed(){return SPEED*(1+level()*.15);}
+function speedMultiplier(){return 1+level()*.15+Math.floor(score/30)*.30;}
+function speed(){return SPEED*speedMultiplier();}
 function nightAmount(){return (1-Math.cos(flight/DAY_CYCLE*Math.PI*2))/2;}
 function blend(day,night,t){return 'rgb('+day.map((v,i)=>Math.round(v+(night[i]-v)*t)).join(',')+')';}
-function updateHud(){stateEl.textContent=(nightAmount()>=.5?'밤':'낮')+' · LV '+(level()+1)+' · '+(1+level()*.15).toFixed(2)+'×';}
+function updateHud(){stateEl.textContent=(nightAmount()>=.5?'밤':'낮')+' · LV '+(level()+1)+' · '+speedMultiplier().toFixed(2)+'×';}
 function startGame(){mode='playing';bird={x:104,y:260,v:-300};pipes=[];score=0;spawnClock=0;flight=0;accumulator=0;lastTime=null;scoreEl.textContent='0';updateHud();overlay.hidden=true;startButton.blur();}
 function flap(){if(mode==='playing')bird.v=-315;}
 function endGame(){if(mode!=='playing')return;mode='over';stateEl.textContent='FINISHED';titleEl.textContent='멋진 비행이었어요!';messageEl.textContent='최종 점수 '+score+'점 · 다시 도전해 볼까요?';startButton.textContent='다시 시작 →';overlay.hidden=false;}
