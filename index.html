@@ -45,7 +45,7 @@ function update(dt){if(mode!=='playing')return;invincible=Math.max(0,invincible-
 }
 // Keep the bird on screen and give it a recovery flap after hitting the floor.
 if(bird.y+R>=FLOOR){bird.y=FLOOR-R-1;bird.v=-315;}
-if(bird.y-R<=0){bird.y=R+1;bird.v=Math.max(0,bird.v);}for(const p of pipes){if(!p.passed&&p.x+PIPE_WIDTH<bird.x-R){p.passed=true;score++;scoreEl.textContent=String(score);updateHud();}}pipes=pipes.filter(p=>p.x+PIPE_WIDTH>-10);}
+if(bird.y-R<=0){bird.y=R+1;bird.v=Math.max(0,bird.v);}for(const p of pipes){if(!p.passed&&p.x+PIPE_WIDTH<bird.x-R){p.passed=true;score++;scoreEl.textContent=String(score);updateHud();if(score>=5){endGame();return;}}}pipes=pipes.filter(p=>p.x+PIPE_WIDTH>-10);}
 function rounded(x,y,w,h,r,color){ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
 function cloud(x,y,s){ctx.fillStyle='#ffffff80';ctx.beginPath();ctx.ellipse(x,y,29*s,12*s,0,0,Math.PI*2);ctx.ellipse(x-13*s,y-6*s,14*s,14*s,0,0,Math.PI*2);ctx.ellipse(x+7*s,y-11*s,18*s,18*s,0,0,Math.PI*2);ctx.fill();}
 function draw(){const night=nightAmount();const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,blend([205,233,220],[21,31,65],night));bg.addColorStop(1,blend([237,240,205],[75,83,117],night));ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
